@@ -23,13 +23,14 @@ class View:
         w (int): Width of the virtual screen.
         h (int): Height of the virtual screen.
     """
-    def __init__(self, x_max=10000, y_max=10000):
+    def __init__(self, screen, x_max=10000, y_max=10000):
         self.x_max = x_max
         self.y_max = y_max
         self.x = 0
         self.y = 0
         self.w = config.VIRT_W
         self.h = config.VIRT_H
+        self.screen = screen
 
         self.virt_screen = pygame.Surface((self.w, self.h))
 
@@ -38,11 +39,14 @@ class View:
         self.x = min(max(self.x, 0), self.x_max - self.w)
         self.y = min(max(self.y, 0), self.y_max - self.h)
 
-    def world_to_virt(self, rect):
-        ret = pygame.Rect(rect)
-        ret.x -= self.x
-        ret.y -= self.y
-        return ret
+    def screen_to_world(self, scr_x, scr_y):
+        scr_w, scr_h = self.screen.get_size()
+        world_x = int(1. * scr_x / scr_w * self.w + self.x)
+        world_y = int(1. * scr_y / scr_h * self.h + self.y)
+        return (world_x, world_y)
+
+    def world_to_virt(self, x, y):
+        return (x - self.x, y - self.y)
 
     def move(self, dx, dy):
         """Move the view.
@@ -95,8 +99,8 @@ class View:
         rect.y -= self.y
         self.virt_screen.blit(source, rect, area, special_flags)
 
-    def draw(self, screen):
+    def draw(self):
         """Draw the virtual screen on the given surface. The virtual screen
         is stretched to match the size of the screen."""
-        pygame.transform.smoothscale(self.virt_screen, screen.get_size(),
-                                     screen)
+        pygame.transform.smoothscale(self.virt_screen, self.screen.get_size(),
+                                     self.screen)

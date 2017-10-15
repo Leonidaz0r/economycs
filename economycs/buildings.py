@@ -22,7 +22,7 @@ class Selectable(pygame.sprite.Sprite):
         if self.is_selected:
             center_x = self.rect.x + self.rect.w / 2
             center_y = self.rect.y + self.rect.h / 2
-            screen_center = view.world_to_virt((center_x, center_y))
+            screen_center = pygame.Rect(view.world_to_virt(center_x, center_y))
             radius = max(self.rect.w, self.rect.h)
             pygame.draw.circle(view.virt_screen, self.color, screen_center,
                                radius, SELECTION_CIRCLE_WIDTH)

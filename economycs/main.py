@@ -21,7 +21,7 @@ def main():
     load_resources()
 
     # Create objects
-    view = View(10000, 10000)
+    view = View(screen, 10000, 10000)
     _map = Map(2000, 1000)
     ui = UI()
 
@@ -47,7 +47,7 @@ def main():
                 if event.key == pygame.K_x:
                     return
                 if event.key == pygame.K_c:
-                    x, y = pygame.mouse.get_pos()
+                    x, y = view.screen_to_world(*pygame.mouse.get_pos())
                     city = City(x, y)
                     city.add(cities)
 
@@ -81,7 +81,7 @@ def main():
         view.clear()
         _map.draw(view)
         cities.draw(view)
-        view.draw(screen)
+        view.draw()
 
         ui.draw(screen)
 
