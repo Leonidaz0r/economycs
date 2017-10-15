@@ -1,7 +1,7 @@
 import pygame
 
 from economycs import config
-from economycs.buildings import City
+from economycs.buildings import ClickableGroup, City
 from economycs.map import Map
 from economycs.resources import load_resources
 from economycs.ui import UI
@@ -25,7 +25,8 @@ def main():
     _map = Map(2000, 1000)
     ui = UI()
 
-    cities = pygame.sprite.Group()
+    cities = ClickableGroup()
+    selected = ClickableGroup()
 
     # Start the clock
     clock = pygame.time.Clock()
@@ -54,6 +55,20 @@ def main():
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_h:
                     ui.show_keys = False
+
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                clicked = cities.sprite_at(*pygame.mouse.get_pos())
+                if (clicked is None or
+                        not pygame.key.get_pressed()[pygame.K_LSHIFT]):
+                    # Deselect all
+                    for sprite in selected.sprites():
+                        sprite.is_selected = False
+                    selected.empty()
+
+                if clicked is not None:
+                    # Select clicked object
+                    clicked.is_selected = True
+                    clicked.add(selected)
 
         #
         # Update world
