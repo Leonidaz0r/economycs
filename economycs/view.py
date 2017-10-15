@@ -38,6 +38,12 @@ class View:
         self.x = min(max(self.x, 0), self.x_max - self.w)
         self.y = min(max(self.y, 0), self.y_max - self.h)
 
+    def world_to_virt(self, rect):
+        ret = pygame.Rect(rect)
+        ret.x -= self.x
+        ret.y -= self.y
+        return ret
+
     def move(self, dx, dy):
         """Move the view.
 
@@ -80,6 +86,14 @@ class View:
     def clear(self):
         """Clear the virtual screen to black."""
         self.virt_screen.fill((0, 0, 0))
+
+    def blit(self, source, rect, area=None, special_flags=0):
+        """Blit like for a surface, but world coordinates are transformed to
+        screen coordinates."""
+        rect = pygame.Rect(rect)
+        rect.x -= self.x
+        rect.y -= self.y
+        self.virt_screen.blit(source, rect, area, special_flags)
 
     def draw(self, screen):
         """Draw the virtual screen on the given surface. The virtual screen

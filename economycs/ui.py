@@ -22,6 +22,7 @@ class UI:
         lines = [
             ('w, a, s, d', 'Move screen'),
             ('q, e', 'Zoom In / Out'),
+            ('c', 'Build city'),
             ('x', 'Quit')
         ]
         for keys, label in lines:

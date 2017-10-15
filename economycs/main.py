@@ -1,7 +1,9 @@
 import pygame
 
 from economycs import config
+from economycs.buildings import City
 from economycs.map import Map
+from economycs.resources import load_resources
 from economycs.ui import UI
 from economycs.view import View
 
@@ -15,10 +17,15 @@ def main():
     pygame.display.flip()
     pygame.display.set_caption("Economycs")
 
+    # Load resources
+    load_resources()
+
     # Create objects
     view = View(10000, 10000)
     _map = Map(2000, 1000)
     ui = UI()
+
+    cities = pygame.sprite.Group()
 
     # Start the clock
     clock = pygame.time.Clock()
@@ -39,6 +46,10 @@ def main():
                     ui.show_keys = True
                 if event.key == pygame.K_x:
                     return
+                if event.key == pygame.K_c:
+                    x, y = pygame.mouse.get_pos()
+                    city = City(x, y)
+                    city.add(cities)
 
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_h:
@@ -69,6 +80,7 @@ def main():
 
         view.clear()
         _map.draw(view)
+        cities.draw(view)
         view.draw(screen)
 
         ui.draw(screen)
